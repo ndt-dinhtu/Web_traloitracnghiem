@@ -3,14 +3,21 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { GrAddCircle } from "react-icons/gr";
 import axios from "axios";
+import { toast } from "sonner";
 
 const ModalCareteUser = ({ show, setShow }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [role, setRole] = useState("USER");
-  const [imgae, setImage] = useState("");
+  const [image, setImage] = useState("");
   const [prewiewImage, setPreviewImage] = useState("");
+
+  const onKeyDownHandler = (e) => {
+    if (e.keyCode === 13) {
+      handleSumitCreateUser();
+    }
+  };
 
   const handleClose = () => {
     setShow(false);
@@ -30,21 +37,53 @@ const ModalCareteUser = ({ show, setShow }) => {
     }
   };
 
+  const validateEmail = (email) => {
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+      );
+  };
+
   const handleSumitCreateUser = async () => {
+    const isValidEmail = validateEmail(email);
+    if (!isValidEmail) {
+      toast.error("Invalid email");
+      return;
+    }
+
+    if (!password) {
+      toast.error("Password is required");
+      return;
+    }
+
+    if (!username) {
+      toast.error("Username is required");
+      return;
+    }
+
     let formData = new FormData();
     formData.append("email", email);
     formData.append("password", password);
     formData.append("username", username);
     formData.append("role", role);
-    formData.append("userImage", imgae);
+    formData.append("userImage", image);
 
-    const data = await axios.post(
+    const res = await axios.post(
       "http://localhost:8081/api/v1/participant",
       formData,
     );
-    console.log(data);
-  };
 
+    if (res.data && res.data.EC === 0) {
+      toast.success(res.data.EM);
+      handleClose();
+    }
+
+    if (res.data && res.data.EC !== 0) {
+      toast.error(res.data.EM);
+    }
+    console.log(">>> check res create user: ", res.data);
+  };
   return (
     <>
       <Modal
@@ -57,9 +96,10 @@ const ModalCareteUser = ({ show, setShow }) => {
       >
         <Modal.Header closeButton>
           <Modal.Title>Add new User</Modal.Title>
+          <button onClick={() => toast.success("Test Sonner")}>Test</button>
         </Modal.Header>
         <Modal.Body>
-          <form className="row g-3">
+          <form className="row g-3" onKeyDown={onKeyDownHandler}>
             <div className="col-md-6">
               <label className="form-label">Email</label>
               <input

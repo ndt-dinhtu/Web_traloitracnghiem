@@ -8,7 +8,9 @@
         max-width: 1300px !important;
     }
 }
-
+.Toastify__toast-container {
+  z-index: 9999;
+}
 
 .app-container {
     .header-container {

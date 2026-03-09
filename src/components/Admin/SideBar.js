@@ -9,12 +9,12 @@ import {
   SidebarContent,
 } from "react-pro-sidebar";
 import {
-  FaTachometerAlt,
+  // FaTachometerAlt,
   FaGem,
-  FaList,
-  FaGithub,
-  FaRegLaughWink,
-  FaHeart,
+  // FaList,
+  // FaGithub,
+  // FaRegLaughWink,
+  // FaHeart,
 } from "react-icons/fa";
 import sidebarBg from "../../assets/bg2.jpg";
 import { DiReact } from "react-icons/di";
@@ -23,7 +23,7 @@ import { Link } from "react-router-dom";
 import "./SideBar.scss";
 
 const SideBar = (props) => {
-  const { image, collapsed, toggled, handleToggleSidebar } = props;
+  const {  collapsed, toggled, handleToggleSidebar } = props;
   return (
     <>
       <ProSidebar
