@@ -2,8 +2,8 @@ import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { GrAddCircle } from "react-icons/gr";
-import axios from "axios";
 import { toast } from "sonner";
+import { postCreateNewUser } from "../../../service/apiService";
 
 const ModalCareteUser = ({ show, setShow }) => {
   const [email, setEmail] = useState("");
@@ -62,17 +62,9 @@ const ModalCareteUser = ({ show, setShow }) => {
       return;
     }
 
-    let formData = new FormData();
-    formData.append("email", email);
-    formData.append("password", password);
-    formData.append("username", username);
-    formData.append("role", role);
-    formData.append("userImage", image);
+ 
 
-    const res = await axios.post(
-      "http://localhost:8081/api/v1/participant",
-      formData,
-    );
+    const res = await postCreateNewUser(email, password, username, role, image);
 
     if (res.data && res.data.EC === 0) {
       toast.success(res.data.EM);
