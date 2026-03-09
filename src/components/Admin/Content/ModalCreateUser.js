@@ -1,20 +1,60 @@
 import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
+import { GrAddCircle } from "react-icons/gr";
+import axios from "axios";
 
-const ModalCareteUser = () => {
-  const [show, setShow] = useState(false);
+const ModalCareteUser = ({ show, setShow }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [role, setRole] = useState("USER");
+  const [imgae, setImage] = useState("");
+  const [prewiewImage, setPreviewImage] = useState("");
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleClose = () => {
+    setShow(false);
+    setEmail("");
+    setPassword("");
+    setUsername("");
+    setRole("USER");
+    setImage("");
+    setPreviewImage("");
+  };
+
+  const handleUploadFile = (e) => {
+    if (e.target && e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setPreviewImage(URL.createObjectURL(file));
+      setImage(file);
+    }
+  };
+
+  const handleSumitCreateUser = async () => {
+    let formData = new FormData();
+    formData.append("email", email);
+    formData.append("password", password);
+    formData.append("username", username);
+    formData.append("role", role);
+    formData.append("userImage", imgae);
+
+    const data = await axios.post(
+      "http://localhost:8081/api/v1/participant",
+      formData,
+    );
+    console.log(data);
+  };
 
   return (
     <>
-      <Button variant="primary" onClick={handleShow}>
-        Launch demo modal
-      </Button>
-
-      <Modal show={show} onHide={handleClose} size="xl" backdrop="static" keyboard={false}>
+      <Modal
+        show={show}
+        onHide={handleClose}
+        size="xl"
+        backdrop="static"
+        keyboard={false}
+        className="modal-add-user"
+      >
         <Modal.Header closeButton>
           <Modal.Title>Add new User</Modal.Title>
         </Modal.Header>
@@ -22,28 +62,60 @@ const ModalCareteUser = () => {
           <form className="row g-3">
             <div className="col-md-6">
               <label className="form-label">Email</label>
-              <input type="email" className="form-control" />
+              <input
+                type="email"
+                className="form-control"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </div>
             <div className="col-md-6">
               <label className="form-label">Password</label>
-              <input type="password" className="form-control" />
+              <input
+                type="password"
+                className="form-control"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </div>
             <div className="col-md-6">
               <label className="form-label">Username</label>
-              <input type="text" className="form-control" />
+              <input
+                type="text"
+                className="form-control"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
             </div>
             <div className="col-md-6">
               <label className="form-label">Role</label>
-              <select className="form-select">
-                <option selected value="USER">
-                  User
-                </option>
+              <select
+                className="form-select"
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+              >
+                <option value="USER">User</option>
                 <option value="ADMIN">Admin</option>
               </select>
             </div>
             <div className="col-md-12">
-              <label className="form-label">Image</label>
-              <input type="file" className="form-control" />
+              <label className="form-label label-upload" htmlFor="labelUpload">
+                <GrAddCircle /> Upload-image
+              </label>
+              <input
+                type="file"
+                id="labelUpload"
+                hidden
+                className="form-control"
+                onChange={(e) => handleUploadFile(e)}
+              />
+            </div>
+            <div className="col-md-12 img-preview">
+              {prewiewImage ? (
+                <img src={prewiewImage} alt="Preview" className="img-fluid" />
+              ) : (
+                <span>Preview Image</span>
+              )}
             </div>
           </form>
         </Modal.Body>
@@ -51,7 +123,7 @@ const ModalCareteUser = () => {
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleClose}>
+          <Button variant="primary" onClick={() => handleSumitCreateUser()}>
             Save
           </Button>
         </Modal.Footer>
