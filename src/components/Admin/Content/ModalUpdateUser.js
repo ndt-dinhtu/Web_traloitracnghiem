@@ -3,9 +3,10 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { GrAddCircle } from "react-icons/gr";
 import { toast } from "sonner";
-import { postCreateNewUser } from "../../../service/apiService";
+import { updateUser } from "../../../service/apiService";
+import _ from "lodash";
 
-const ModalCareteUser = ({ show, setShow,fetchListUsers }) => {
+const ModalUpdateUser = ({ show, setShow, fetchListUsers, dataUpdate ,resetUpdateData}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
@@ -13,17 +14,27 @@ const ModalCareteUser = ({ show, setShow,fetchListUsers }) => {
   const [image, setImage] = useState("");
   const [previewImage, setPreviewImage] = useState("");
 
-  const emailRef = useRef(null);
-  const passwordRef = useRef(null);
   const usernameRef = useRef(null);
 
   useEffect(() => {
     if (show) {
       setTimeout(() => {
-        emailRef.current?.focus();
+        usernameRef.current?.focus();
       }, 200);
     }
   }, [show]);
+
+  useEffect(() => {
+    if (dataUpdate && !_.isEmpty(dataUpdate)) {
+      setEmail(dataUpdate.email);
+      setUsername(dataUpdate.username);
+      setRole(dataUpdate.role);
+      setImage();
+      if(dataUpdate.image){
+        setPreviewImage(`data:image/jpeg;base64,${dataUpdate.image}`);
+      }
+    }
+  }, [dataUpdate]);
 
   const onKeyDownHandler = (e) => {
     if (e.key === "Enter") {
@@ -40,6 +51,8 @@ const ModalCareteUser = ({ show, setShow,fetchListUsers }) => {
     setRole("USER");
     setImage("");
     setPreviewImage("");
+
+    resetUpdateData();
   };
 
   const handleUploadFile = (e) => {
@@ -50,28 +63,8 @@ const ModalCareteUser = ({ show, setShow,fetchListUsers }) => {
     }
   };
 
-  const validateEmail = (email) => {
-    return String(email)
-      .toLowerCase()
-      .match(
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-      );
-  };
 
   const handleSumitCreateUser = async () => {
-    const isValidEmail = validateEmail(email);
-
-    if (!isValidEmail) {
-      toast.error("Invalid email");
-      emailRef.current?.focus();
-      return;
-    }
-
-    if (!password) {
-      toast.error("Password is required");
-      passwordRef.current?.focus();
-      return;
-    }
 
     if (!username) {
       toast.error("Username is required");
@@ -79,19 +72,24 @@ const ModalCareteUser = ({ show, setShow,fetchListUsers }) => {
       return;
     }
 
-    const data = await postCreateNewUser(email, password, username, role, image);
+    const data = await updateUser(
+      dataUpdate.id,
+      username,
+      role,
+      image,
+    );
 
     if (data && data.EC === 0) {
       toast.success(data.EM);
       handleClose();
-      fetchListUsers()
+      fetchListUsers();
     }
 
     if (data && data.EC !== 0) {
       toast.error(data.EM);
     }
 
-    console.log(">>> check res create user: ",  data);
+    console.log(">>> check res create user: ", data);
   };
 
   return (
@@ -104,7 +102,7 @@ const ModalCareteUser = ({ show, setShow,fetchListUsers }) => {
       className="modal-add-user"
     >
       <Modal.Header closeButton>
-        <Modal.Title>Add new User</Modal.Title>
+        <Modal.Title>Update User</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
@@ -112,7 +110,7 @@ const ModalCareteUser = ({ show, setShow,fetchListUsers }) => {
           <div className="col-md-6">
             <label className="form-label">Email</label>
             <input
-              ref={emailRef}
+              disabled
               type="email"
               className="form-control"
               value={email}
@@ -123,7 +121,7 @@ const ModalCareteUser = ({ show, setShow,fetchListUsers }) => {
           <div className="col-md-6">
             <label className="form-label">Password</label>
             <input
-              ref={passwordRef}
+              disabled
               type="password"
               className="form-control"
               value={password}
@@ -189,4 +187,4 @@ const ModalCareteUser = ({ show, setShow,fetchListUsers }) => {
   );
 };
 
-export default ModalCareteUser;
+export default ModalUpdateUser;

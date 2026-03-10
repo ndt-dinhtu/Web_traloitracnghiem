@@ -7,12 +7,12 @@
         }
     }
     .admin-content {
+        flex: 1;
         .admin-header {
             height: 40px;
-            border: 1px solid #ccc;
+            border: 10px solid #ccc;
         }
         .admin-main {
-            border: 1px solid red;
         }
     }
 }

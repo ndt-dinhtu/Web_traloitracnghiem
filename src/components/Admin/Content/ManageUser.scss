@@ -1,19 +1,27 @@
-.manage-user-container{
-    .title{
-        font-size:"20px";
+.manage-user-container {
+    width: 100%;
+
+    .title {
+        font-size: 20px;
         font-weight: 600;
         padding: 20px 0;
     }
-    .users-content{
-
-        .btn-add-new{
-
+    .users-content {
+        .btn-add-new {
         }
-        .tables-users-container{
+        .tables-users-container {
+            padding: 20px 10px;
+            width: 100%;
 
+            .no-data {
+                text-align: center;
+                padding: 80px 0;
+                color: #888;
+                font-size: 40px;
+                font-style: italic;
+            }
         }
     }
-
 }
 
 .modal-add-user {
@@ -44,6 +52,77 @@
 
         &:hover {
             background: #f7eaea;
+        }
+    }
+}
+
+.modal-delete-user {
+    .modal-header {
+        border-bottom: none;
+    }
+
+    .delete-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 600;
+
+        .danger-icon {
+            color: #dc3545;
+            font-size: 24px;
+        }
+    }
+
+    .modal-body {
+        text-align: center;
+        padding: 25px;
+
+        .delete-text {
+            font-size: 17px;
+            margin-bottom: 20px;
+            color: #444;
+        }
+
+        .delete-user-info {
+            background: #f8f9fa;
+            padding: 18px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+
+            h5,
+            p {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin: 0;
+            }
+
+            h5 {
+                font-weight: 600;
+                font-size: 16px;
+                color: #333;
+
+                svg {
+                    color: #0d6efd;
+                }
+            }
+
+            p {
+                font-size: 14px;
+                color: #666;
+
+                svg {
+                    color: #ea4335;
+                }
+            }
+        }
+    }
+
+    .modal-footer {
+        button {
+            min-width: 110px;
         }
     }
 }

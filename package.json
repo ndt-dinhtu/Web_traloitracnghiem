@@ -48,6 +48,7 @@
   "devDependencies": {
     "@types/react-toastify": "^4.1.0",
     "css-loader": "^7.1.2",
+    "lodash": "^4.17.21",
     "postcss-loader": "^8.1.1",
     "resolve-url-loader": "^5.0.0",
     "sass-loader": "^14.2.1"
