@@ -12,6 +12,8 @@ import { ManageUser } from "./components/Admin/Content/ManageUser";
 import DashBoard from "./components/Admin/Content/DashBoard";
 import "sonner/dist/styles.css";
 import { Toaster } from "sonner";
+import Login from "./components/Auth/Login";
+import Register from "./components/Auth/Register";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -39,6 +41,9 @@ root.render(
         <Route index element={<DashBoard />} />
         <Route path="manage-user" element={<ManageUser />} />
       </Route>
+
+       <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
     </Routes>
   </BrowserRouter>,
 );

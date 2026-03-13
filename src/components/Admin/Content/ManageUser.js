@@ -1,7 +1,7 @@
 import ModalCareteUser from "./ModalCreateUser";
 import "./ManageUser.scss";
 import { GrAddCircle } from "react-icons/gr";
-import TableUser from "./TableUser";
+
 import { useEffect, useState } from "react";
 import {
   getAllUser,
