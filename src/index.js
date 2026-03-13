@@ -18,6 +18,20 @@ import Register from "./components/Auth/Register";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
+    <Routes>
+      <Route path="/" element={<App />}>
+        <Route index element={<HomePage />} />
+        <Route path="/users" element={<User />} />
+      </Route>
+
+      <Route path="/admins" element={<Admin />}>
+        <Route index element={<DashBoard />} />
+        <Route path="manage-user" element={<ManageUser />} />
+      </Route>
+
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+    </Routes>
     <Toaster
       position="top-right"
       theme="light"
@@ -31,20 +45,6 @@ root.render(
       toastOptions={{}}
       icons={{}}
     />
-    <Routes>
-      <Route path="/" element={<App />}>
-        <Route index element={<HomePage />} />
-        <Route path="/users" element={<User />} />
-      </Route>
-
-      <Route path="/admins" element={<Admin />}>
-        <Route index element={<DashBoard />} />
-        <Route path="manage-user" element={<ManageUser />} />
-      </Route>
-
-       <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-    </Routes>
   </BrowserRouter>,
 );
 // If you want to start measuring performance in your app, pass a function

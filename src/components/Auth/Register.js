@@ -1,25 +1,40 @@
 import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import "./Register.scss";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { toast } from "sonner";
+import { postRegister } from "../../service/apiService";
 
 const Register = () => {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
-  const handleRegister = (e) => {
+  const [isShowPassword, setIsShowPassword] = useState(false);
+  const navigate = useNavigate();
+  const handleRegister = async (e) => {
     e.preventDefault();
+
+    const data = await postRegister(email, password, username);
     if (password !== confirmPassword) {
-      alert("Mật khẩu xác nhận không khớp!");
+      toast.error("Mật khẩu xác nhận không khớp!");
       return;
     }
-    console.log("Dữ liệu đăng ký:", { email, username, password });
-    // Gọi API đăng ký tại đây
+    if (data && data.EC === 0) {
+      toast.success(data.EM);
+      navigate("/");
+    } else {
+      toast.error(data.EM);
+    }
   };
 
   return (
     <div className="register-container">
       <div className="register-box">
+        <div className="back-button" onClick={() => navigate("/")}>
+          <span>&#171;</span> Quay lại trang chủ
+        </div>
+
         <form className="register-form" onSubmit={handleRegister}>
           <div className="header">
             <h2>Tạo Tài Khoản</h2>
@@ -48,26 +63,36 @@ const Register = () => {
             />
           </div>
 
-          <div className="input-group">
+          <div className="input-group password-group">
             <label>Mật khẩu</label>
-            <input
-              type="password"
-              placeholder="Tối thiểu 6 ký tự"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            <div className="input-wrapper">
+              <input
+                type={isShowPassword ? "text" : "password"}
+                placeholder="Tối thiểu 6 ký tự"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <span
+                className="icons-eye"
+                onClick={() => setIsShowPassword(!isShowPassword)}
+              >
+                {isShowPassword ? <FaEyeSlash /> : <FaEye />}
+              </span>
+            </div>
           </div>
 
-          <div className="input-group">
+          <div className="input-group password-group">
             <label>Xác nhận mật khẩu</label>
-            <input
-              type="password"
-              placeholder="Nhập lại mật khẩu"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-            />
+            <div className="input-wrapper">
+              <input
+                type={isShowPassword ? "text" : "password"}
+                placeholder="Nhập lại mật khẩu"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+              />
+            </div>
           </div>
 
           <button type="submit" className="btn-register">
@@ -75,7 +100,7 @@ const Register = () => {
           </button>
 
           <div className="login-link">
-            Đã có tài khoản? <a href="/login">Đăng nhập</a>
+            Đã có tài khoản? <Link to="/login">Đăng nhập</Link>
           </div>
         </form>
       </div>

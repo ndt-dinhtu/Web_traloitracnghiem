@@ -1,22 +1,39 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Login.scss";
+import { postLogin } from "../../service/apiService";
+import { toast } from "sonner";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate(); 
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    console.log("Check login data:", { email, password });
-    // Tại đây bạn sẽ gọi API login của mình
+    let data = await postLogin(email, password);
+
+    if(data && data.EC===0){
+      toast.success(data.EM);
+      navigate("/");
+    }else{
+      alert(data.EM);
+      toast.error(data.EM);
+    }
   };
 
-
-
+  const handleGoBack = () => {
+    navigate("/"); 
+  };
 
   return (
     <div className="login-container">
       <div className="login-box">
+        {/* Nút quay lại */}
+        <div className="back-button" onClick={handleGoBack}>
+          <span>&#171;</span> Quay lại trang chủ
+        </div>
+
         <form className="login-form" onSubmit={handleLogin}>
           <div className="header">
             <h2>Đăng Nhập</h2>
@@ -52,7 +69,7 @@ const Login = () => {
             <a href="/forgot-password">Quên mật khẩu?</a>
           </div>
 
-          <button type="submit" className="btn-submit" >
+          <button type="submit" className="btn-submit">
             Đăng nhập ngay
           </button>
 

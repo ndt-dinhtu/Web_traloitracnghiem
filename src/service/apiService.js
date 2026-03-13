@@ -33,4 +33,20 @@ const getAllUserWithPagination = async (page, limit) => {
   return await axios.get(`api/v1/participant?page=${page}&limit=${limit}`);
 };
 
-export { postCreateNewUser, getAllUser, updateUser, deleteUser, getAllUserWithPagination };
+const postLogin = async (email, password) => {
+  return await axios.post("api/v1/login", { email, password });
+};
+
+const postRegister = async (email, password, username) => {
+  return await axios.post("api/v1/register", { email, password, username });
+}
+
+export {
+  postCreateNewUser,
+  getAllUser,
+  updateUser,
+  deleteUser,
+  getAllUserWithPagination,
+  postLogin,
+  postRegister
+};
