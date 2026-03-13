@@ -6,7 +6,15 @@ import { FaRegUser } from "react-icons/fa";
 import { deleteUser } from "../../../service/apiService";
 import { toast } from "sonner";
 
-const ModalDeleteUser = ({ show, setShow, dataDelete, fetchListUsers }) => {
+const ModalDeleteUser = ({
+  show,
+  setShow,
+  dataDelete,
+  fetchListUsers,
+  fetchListUsersWithPagination,
+  currentPage,
+  setCurrentPage,
+}) => {
   const handleClose = () => setShow(false);
   const handleSubmitDeleteUser = async () => {
     const data = await deleteUser(dataDelete.id);
@@ -14,7 +22,9 @@ const ModalDeleteUser = ({ show, setShow, dataDelete, fetchListUsers }) => {
     if (data && data.EC === 0) {
       toast.success(data.EM);
       handleClose();
-      fetchListUsers();
+      // fetchListUsers();
+      setCurrentPage(1);
+      await fetchListUsersWithPagination(1);
     }
 
     if (data && data.EC !== 0) {

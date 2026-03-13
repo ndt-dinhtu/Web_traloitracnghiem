@@ -6,7 +6,16 @@ import { toast } from "sonner";
 import { updateUser } from "../../../service/apiService";
 import _ from "lodash";
 
-const ModalUpdateUser = ({ show, setShow, fetchListUsers, dataUpdate ,resetUpdateData}) => {
+const ModalUpdateUser = ({
+  show,
+  setShow,
+  fetchListUsers,
+  dataUpdate,
+  resetUpdateData,
+  fetchListUsersWithPagination,
+  currentPage,
+  setCurrentPage,
+}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
@@ -30,7 +39,7 @@ const ModalUpdateUser = ({ show, setShow, fetchListUsers, dataUpdate ,resetUpdat
       setUsername(dataUpdate.username);
       setRole(dataUpdate.role);
       setImage();
-      if(dataUpdate.image){
+      if (dataUpdate.image) {
         setPreviewImage(`data:image/jpeg;base64,${dataUpdate.image}`);
       }
     }
@@ -63,26 +72,19 @@ const ModalUpdateUser = ({ show, setShow, fetchListUsers, dataUpdate ,resetUpdat
     }
   };
 
-
   const handleSumitCreateUser = async () => {
-
     if (!username) {
       toast.error("Username is required");
       usernameRef.current?.focus();
       return;
     }
 
-    const data = await updateUser(
-      dataUpdate.id,
-      username,
-      role,
-      image,
-    );
+    const data = await updateUser(dataUpdate.id, username, role, image);
 
     if (data && data.EC === 0) {
       toast.success(data.EM);
       handleClose();
-      fetchListUsers();
+      await fetchListUsersWithPagination(currentPage);
     }
 
     if (data && data.EC !== 0) {

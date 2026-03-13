@@ -5,7 +5,14 @@ import { GrAddCircle } from "react-icons/gr";
 import { toast } from "sonner";
 import { postCreateNewUser } from "../../../service/apiService";
 
-const ModalCareteUser = ({ show, setShow,fetchListUsers }) => {
+const ModalCareteUser = ({
+  show,
+  setShow,
+  fetchListUsers,
+  fetchListUsersWithPagination,
+  currentPage,
+  setCurrentPage,
+}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
@@ -79,19 +86,27 @@ const ModalCareteUser = ({ show, setShow,fetchListUsers }) => {
       return;
     }
 
-    const data = await postCreateNewUser(email, password, username, role, image);
+    const data = await postCreateNewUser(
+      email,
+      password,
+      username,
+      role,
+      image,
+    );
 
     if (data && data.EC === 0) {
       toast.success(data.EM);
       handleClose();
-      fetchListUsers()
+      // fetchListUsers()
+      setCurrentPage(1);
+      await fetchListUsersWithPagination(1);
     }
 
     if (data && data.EC !== 0) {
       toast.error(data.EM);
     }
 
-    console.log(">>> check res create user: ",  data);
+    console.log(">>> check res create user: ", data);
   };
 
   return (

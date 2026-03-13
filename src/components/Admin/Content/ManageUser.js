@@ -3,20 +3,27 @@ import "./ManageUser.scss";
 import { GrAddCircle } from "react-icons/gr";
 import TableUser from "./TableUser";
 import { useEffect, useState } from "react";
-import { getAllUser } from "../../../service/apiService";
+import {
+  getAllUser,
+  getAllUserWithPagination,
+} from "../../../service/apiService";
 import ModalUpdateUser from "./ModalUpdateUser";
 import ModalDeleteUser from "./ModalDeleteUser";
+import TableUserPaginate from "./TableUserPaginate";
 
 export const ManageUser = () => {
+  const LIMIT_USER = 2;
   const [showModalCreateUser, setShowModalCreateUser] = useState(false);
   const [showModalUpdateUser, setShowModalUpdateUser] = useState(false);
   const [showModalDeleteUser, setShowModalDeleteUser] = useState(false);
   const [listUsers, setListUsers] = useState([]);
   const [dataUpdate, setDataUpdate] = useState({});
   const [dataDelete, setDataDelete] = useState({});
+  const [pageCount, setPageCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    fetchListUsers();
+    fetchListUsersWithPagination(1);
   }, []);
 
   const fetchListUsers = async () => {
@@ -27,19 +34,29 @@ export const ManageUser = () => {
     }
   };
 
+  const fetchListUsersWithPagination = async (page, limit) => {
+    let res = await getAllUserWithPagination(page, LIMIT_USER);
+
+    if (res && res.DT && res.EC === 0) {
+      console.log("check res pagination: ", res.DT);
+      setListUsers(res.DT.users);
+      setPageCount(res.DT.totalPages);
+    }
+  };
+
   const handleClickBtnUpdate = (user) => {
     setShowModalUpdateUser(true);
     setDataUpdate(user);
   };
-  
+
   const resetUpdateData = () => {
     setDataUpdate({});
   };
 
-  const handleClickBtnDelete= (user)=>{
+  const handleClickBtnDelete = (user) => {
     setShowModalDeleteUser(true);
-    setDataDelete(user)
-  }
+    setDataDelete(user);
+  };
 
   return (
     <div className="manage-user-container">
@@ -47,7 +64,7 @@ export const ManageUser = () => {
       <div className="users-content">
         <div className="btn-add-new">
           <button
-            className="btn btn-primary" 
+            className="btn btn-primary"
             onClick={() => setShowModalCreateUser(true)}
           >
             <GrAddCircle />
@@ -55,10 +72,20 @@ export const ManageUser = () => {
           </button>
         </div>
         <div className="tables-users-container">
-          <TableUser
+          {/* <TableUser
             listUsers={listUsers}
             handleClickBtnUpdate={handleClickBtnUpdate}
             handleClickBtnDelete={handleClickBtnDelete}
+          /> */}
+
+          <TableUserPaginate
+            listUsers={listUsers}
+            handleClickBtnUpdate={handleClickBtnUpdate}
+            handleClickBtnDelete={handleClickBtnDelete}
+            fetchListUsersWithPagination={fetchListUsersWithPagination}
+            pageCount={pageCount}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
           />
         </div>
 
@@ -66,6 +93,9 @@ export const ManageUser = () => {
           show={showModalCreateUser}
           setShow={setShowModalCreateUser}
           fetchListUsers={fetchListUsers}
+          fetchListUsersWithPagination={fetchListUsersWithPagination}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
         />
 
         <ModalUpdateUser
@@ -74,6 +104,9 @@ export const ManageUser = () => {
           dataUpdate={dataUpdate}
           fetchListUsers={fetchListUsers}
           resetUpdateData={resetUpdateData}
+          fetchListUsersWithPagination={fetchListUsersWithPagination}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
         />
 
         <ModalDeleteUser
@@ -81,6 +114,9 @@ export const ManageUser = () => {
           setShow={setShowModalDeleteUser}
           dataDelete={dataDelete}
           fetchListUsers={fetchListUsers}
+          fetchListUsersWithPagination={fetchListUsersWithPagination}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
         />
       </div>
     </div>
