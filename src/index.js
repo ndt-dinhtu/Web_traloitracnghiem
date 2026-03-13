@@ -14,38 +14,44 @@ import "sonner/dist/styles.css";
 import { Toaster } from "sonner";
 import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
-
+import { Provider } from "react-redux";
+import store from "./redux/store";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <BrowserRouter>
-    <Routes>
-      <Route path="/" element={<App />}>
-        <Route index element={<HomePage />} />
-        <Route path="/users" element={<User />} />
-      </Route>
+  <Provider store={store}>
+    <React.StrictMode>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<App />}>
+            <Route index element={<HomePage />} />
+            <Route path="/users" element={<User />} />
+          </Route>
 
-      <Route path="/admins" element={<Admin />}>
-        <Route index element={<DashBoard />} />
-        <Route path="manage-user" element={<ManageUser />} />
-      </Route>
+          <Route path="/admins" element={<Admin />}>
+            <Route index element={<DashBoard />} />
+            <Route path="manage-user" element={<ManageUser />} />
+          </Route>
 
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-    </Routes>
-    <Toaster
-      position="top-right"
-      theme="light"
-      richColors
-      expand
-      duration={4000}
-      visibleToasts={5}
-      closeButton
-      offset={16}
-      gap={8}
-      toastOptions={{}}
-      icons={{}}
-    />
-  </BrowserRouter>,
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Routes>
+        <Toaster
+          position="top-right"
+          theme="light"
+          richColors
+          expand
+          duration={4000}
+          visibleToasts={5}
+          closeButton
+          offset={16}
+          gap={8}
+          toastOptions={{}}
+          icons={{}}
+        />
+      </BrowserRouter>
+      ,
+    </React.StrictMode>
+  </Provider>,
 );
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
