@@ -15,43 +15,47 @@ import { Toaster } from "sonner";
 import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
 import { Provider } from "react-redux";
-import 'nprogress/nprogress.css';
-import store from "./redux/store";
+import "nprogress/nprogress.css";
+import { store, persistor } from "./redux/store";
+import { PersistGate } from "redux-persist/integration/react";
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
+
 root.render(
   <Provider store={store}>
-    <React.StrictMode>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<App />}>
-            <Route index element={<HomePage />} />
-            <Route path="/users" element={<User />} />
-          </Route>
+    <PersistGate loading={null} persistor={persistor}>
+      <React.StrictMode>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<App />}>
+              <Route index element={<HomePage />} />
+              <Route path="/users" element={<User />} />
+            </Route>
 
-          <Route path="/admins" element={<Admin />}>
-            <Route index element={<DashBoard />} />
-            <Route path="manage-user" element={<ManageUser />} />
-          </Route>
+            <Route path="/admins" element={<Admin />}>
+              <Route index element={<DashBoard />} />
+              <Route path="manage-user" element={<ManageUser />} />
+            </Route>
 
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-        </Routes>
-        <Toaster
-          position="top-right"
-          theme="light"
-          richColors
-          expand
-          duration={4000}
-          visibleToasts={5}
-          closeButton
-          offset={16}
-          gap={8}
-          toastOptions={{}}
-          icons={{}}
-        />
-      </BrowserRouter>
-      ,
-    </React.StrictMode>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+          </Routes>
+          <Toaster
+            position="top-right"
+            theme="light"
+            richColors
+            expand
+            duration={4000}
+            visibleToasts={5}
+            closeButton
+            offset={16}
+            gap={8}
+            toastOptions={{}}
+            icons={{}}
+          />
+        </BrowserRouter>
+      </React.StrictMode>
+    </PersistGate>
   </Provider>,
 );
 // If you want to start measuring performance in your app, pass a function
