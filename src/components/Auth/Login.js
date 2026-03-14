@@ -5,23 +5,27 @@ import { postLogin } from "../../service/apiService";
 import { toast } from "sonner";
 import { useDispatch } from "react-redux";
 import { doLogin } from "../../redux/action/userAction";
+import { ImSpinner9 } from "react-icons/im";  
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     let data = await postLogin(email, password);
 
     if (data && data.EC === 0) {
       toast.success(data.EM);
       dispatch(doLogin(data));
+      setIsLoading(false);
       navigate("/");
     } else {
-
+      setIsLoading(false);
       toast.error(data.EM);
     }
   };
@@ -33,7 +37,7 @@ const Login = () => {
   return (
     <div className="login-container">
       <div className="login-box">
-        {/* Nút quay lại */}
+     
         <div className="back-button" onClick={handleGoBack}>
           <span>&#171;</span> Quay lại trang chủ
         </div>
@@ -73,8 +77,8 @@ const Login = () => {
             <a href="/forgot-password">Quên mật khẩu?</a>
           </div>
 
-          <button type="submit" className="btn-submit">
-            Đăng nhập ngay
+          <button type="submit" className="btn-submit" disabled={isLoading}>
+            {isLoading ? <ImSpinner9 className="loader-icon" /> :<span> Đăng nhập ngay</span>}  
           </button>
 
           <div className="signup-link">

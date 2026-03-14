@@ -15,6 +15,7 @@ import { Toaster } from "sonner";
 import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
 import { Provider } from "react-redux";
+import 'nprogress/nprogress.css';
 import store from "./redux/store";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
