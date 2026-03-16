@@ -106,7 +106,7 @@ const ModalCareteUser = ({
       toast.error(data.EM);
     }
 
-    console.log(">>> check res create user: ", data);
+   
   };
 
   return (

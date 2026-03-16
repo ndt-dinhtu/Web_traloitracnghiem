@@ -39,7 +39,15 @@ const postLogin = async (email, password) => {
 
 const postRegister = async (email, password, username) => {
   return await axios.post("api/v1/register", { email, password, username });
-}
+};
+
+const getQuizzUser = async () => {
+  return await axios.get("api/v1/quiz-by-participant");
+};
+
+const getDataQuiz = async (id) => {
+  return await axios.get(`api/v1/questions-by-quiz?quizId=${id}`);
+};
 
 export {
   postCreateNewUser,
@@ -48,5 +56,7 @@ export {
   deleteUser,
   getAllUserWithPagination,
   postLogin,
-  postRegister
+  postRegister,
+  getQuizzUser,
+  getDataQuiz,
 };

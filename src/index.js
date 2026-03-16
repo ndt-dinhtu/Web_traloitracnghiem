@@ -18,6 +18,9 @@ import { Provider } from "react-redux";
 import "nprogress/nprogress.css";
 import { store, persistor } from "./redux/store";
 import { PersistGate } from "redux-persist/integration/react";
+import ListQuizz from "./components/User/ListQuizz";
+import NotFound from "./components/NotFound/NotFound";
+import DetailQuiz from "./components/User/DetailQuiz";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -29,8 +32,9 @@ root.render(
           <Routes>
             <Route path="/" element={<App />}>
               <Route index element={<HomePage />} />
-              <Route path="/users" element={<User />} />
+              <Route path="/users" element={<ListQuizz />} />
             </Route>
+            <Route path="/quiz/:id" element = {<DetailQuiz/>} />
 
             <Route path="/admins" element={<Admin />}>
               <Route index element={<DashBoard />} />
@@ -39,6 +43,7 @@ root.render(
 
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
           <Toaster
             position="top-right"

@@ -12,7 +12,7 @@ import ModalDeleteUser from "./ModalDeleteUser";
 import TableUserPaginate from "./TableUserPaginate";
 
 export const ManageUser = () => {
-  const LIMIT_USER = 2;
+  const LIMIT_USER = 10;
   const [showModalCreateUser, setShowModalCreateUser] = useState(false);
   const [showModalUpdateUser, setShowModalUpdateUser] = useState(false);
   const [showModalDeleteUser, setShowModalDeleteUser] = useState(false);
@@ -38,7 +38,7 @@ export const ManageUser = () => {
     let res = await getAllUserWithPagination(page, LIMIT_USER);
 
     if (res && res.DT && res.EC === 0) {
-      console.log("check res pagination: ", res.DT);
+     
       setListUsers(res.DT.users);
       setPageCount(res.DT.totalPages);
     }
