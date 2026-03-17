@@ -27,39 +27,37 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
-      <React.StrictMode>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<App />}>
-              <Route index element={<HomePage />} />
-              <Route path="/users" element={<ListQuizz />} />
-            </Route>
-            <Route path="/quiz/:id" element = {<DetailQuiz/>} />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<App />}>
+            <Route index element={<HomePage />} />
+            <Route path="/users" element={<ListQuizz />} />
+          </Route>
+          <Route path="/quiz/:id" element={<DetailQuiz />} />
 
-            <Route path="/admins" element={<Admin />}>
-              <Route index element={<DashBoard />} />
-              <Route path="manage-user" element={<ManageUser />} />
-            </Route>
+          <Route path="/admins" element={<Admin />}>
+            <Route index element={<DashBoard />} />
+            <Route path="manage-user" element={<ManageUser />} />
+          </Route>
 
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          <Toaster
-            position="top-right"
-            theme="light"
-            richColors
-            expand
-            duration={4000}
-            visibleToasts={5}
-            closeButton
-            offset={16}
-            gap={8}
-            toastOptions={{}}
-            icons={{}}
-          />
-        </BrowserRouter>
-      </React.StrictMode>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+        <Toaster
+          position="top-right"
+          theme="light"
+          richColors
+          expand
+          duration={4000}
+          visibleToasts={5}
+          closeButton
+          offset={16}
+          gap={8}
+          toastOptions={{}}
+          icons={{}}
+        />
+      </BrowserRouter>
     </PersistGate>
   </Provider>,
 );
