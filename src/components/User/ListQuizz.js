@@ -59,7 +59,7 @@ function ListQuizz() {
               <Button
                 variant="primary"
                 className="btn-start"
-                onClick={()=>navigate(`/quiz/${item.id}`)}
+                onClick={()=>navigate(`/quiz/${item.id}`,{state:{quizTitle:item.description }})}
               >
                 Bắt đầu ngay
               </Button>
