@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
-import { getDataQuiz } from "../../service/apiService";
+import { getDataQuiz, postSubmitQuiz } from "../../service/apiService";
 import _ from "lodash";
 import "./DetailQuiz.scss";
 import Question from "./Question";
+import ModalResult from "./ModalResult";
 
 const DetailQuiz = () => {
   const location = useLocation();
   const params = useParams();
   const quizId = params.id;
-
+  const [showModalResult, setShowModalResult] = useState(false);
   const [dataQuiz, setDataQuiz] = useState([]);
   const [index, setIndex] = useState(0);
-
+  const [dataModalResult, setDataModalResult] = useState({});
   useEffect(() => {
     fetchQuestion();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -52,7 +53,6 @@ const DetailQuiz = () => {
         .value();
 
       setDataQuiz(result);
-      console.log("setDataQuiz: ", result);
     }
   };
 
@@ -67,25 +67,61 @@ const DetailQuiz = () => {
       setIndex(index + 1);
     }
   };
+  const handleCheckBox = (answersId, questionId) => {
+    const dataQuizClone = _.cloneDeep(dataQuiz);
 
-  const handleCheckBox = (answerId, questionId) => {
-    let dataQuizzClone = _.cloneDeep(dataQuiz);
-    const question = dataQuizzClone.find(
-      (item) => +item.questionId === +questionId,
+    const indexQuestion = dataQuizClone.findIndex(
+      (i) => +i.questionId === +questionId,
     );
-    console.log("question: ", question);
-    const b = question.answers.map((i) => {
-      if (+i.id === +answerId) i.isSelected = !i.isSelected;
-      return i;
-    });
-    console.log("b: ", b);
 
-    let indexQuestion = dataQuizzClone.findIndex(
-      (item) => +item.questionId === +questionId,
-    );
     if (indexQuestion !== -1) {
-      dataQuizzClone[indexQuestion] = question;
-      setDataQuiz(dataQuizzClone); 
+      const question = dataQuizClone[indexQuestion];
+
+      console.log(question);
+      question.answers = question.answers.map((ans) => {
+        if (+ans.id === +answersId) {
+          return { ...ans, isSelected: !ans.isSelected };
+        }
+        return ans;
+      });
+
+      setDataQuiz(dataQuizClone);
+    }
+  };
+
+  const handleFinish = async () => {
+    const payload = {
+      quizId: +quizId,
+      answers: [],
+    };
+
+    if (dataQuiz && dataQuiz.length > 0) {
+      payload.answers = dataQuiz.map((question) => {
+        let arrAnswerId = [];
+
+        question.answers.forEach((question) => {
+          if (question.isSelected) {
+            arrAnswerId.push(question.id);
+          }
+        });
+
+        return {
+          questionId: +question.questionId,
+          userAnswerId: arrAnswerId,
+        };
+      });
+    }
+
+    let res = await postSubmitQuiz(payload);
+    console.log(res);
+    if (res && res.EC === 0) {
+      setDataModalResult({
+        countCorrect: res.DT.countCorrect,
+        countTotal: res.DT.countTotal,
+        quizData: res.DT.quizData,
+      });
+      setShowModalResult(true);
+    } else {
     }
   };
 
@@ -119,10 +155,18 @@ const DetailQuiz = () => {
           >
             Next
           </button>
-          <button className="btn btn-warning">Finish</button>
+          <button className="btn btn-warning " onClick={() => handleFinish()}>
+            Finish
+          </button>
         </div>
       </div>
       <div className="right-content">tight content</div>
+      <ModalResult
+        show={showModalResult}
+        setShow={setShowModalResult}
+        dataModalResult={dataModalResult}
+        setDataModalResult={setDataModalResult}
+      />
     </div>
   );
 };

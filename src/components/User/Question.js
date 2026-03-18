@@ -4,7 +4,7 @@ import _ from "lodash";
 const Question = ({ index, data,handleCheckBox }) => {
   if (_.isEmpty(data)) return <></>;
 
-  const handleHandleCheckBox = (e,aId,qId) => {
+  const handleHandleCheckBox = (aId,qId) => {
 
     handleCheckBox(aId,qId)
   };
@@ -35,7 +35,7 @@ const Question = ({ index, data,handleCheckBox }) => {
                 type="checkbox"
                 id={`check-${index}-${idx}`}
                 checked={ans.isSelected}
-                onClick={(e) => handleHandleCheckBox(e,ans.id,data.questionId)}
+                onChange={(e) => handleHandleCheckBox(ans.id,data.questionId)}
               />
               <label
                 className="form-check-label"
