@@ -38,7 +38,6 @@ export const ManageUser = () => {
     let res = await getAllUserWithPagination(page, LIMIT_USER);
 
     if (res && res.DT && res.EC === 0) {
-     
       setListUsers(res.DT.users);
       setPageCount(res.DT.totalPages);
     }

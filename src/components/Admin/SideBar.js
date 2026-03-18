@@ -23,7 +23,7 @@ import { Link } from "react-router-dom";
 import "./SideBar.scss";
 
 const SideBar = (props) => {
-  const {  collapsed, toggled, handleToggleSidebar } = props;
+  const { collapsed, toggled, handleToggleSidebar } = props;
   return (
     <>
       <ProSidebar
@@ -65,7 +65,11 @@ const SideBar = (props) => {
                 Quản lý Users
                 <Link to="/admins/manage-user" />
               </MenuItem>
-              <MenuItem> Quản lý Bài Quiz</MenuItem>
+              <MenuItem>
+                {" "}
+                Quản lý Bài Quiz
+                <Link to="/admins/manage-quiz" />
+              </MenuItem>
               <MenuItem> Quản lý Câu Hỏi</MenuItem>
             </SubMenu>
           </Menu>

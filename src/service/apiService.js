@@ -49,9 +49,18 @@ const getDataQuiz = async (id) => {
   return await axios.get(`api/v1/questions-by-quiz?quizId=${id}`);
 };
 
-const postSubmitQuiz = async(data)=>{
-  return await axios.post(`api/v1/quiz-submit`,{...data})
-}
+const postSubmitQuiz = async (data) => {
+  return await axios.post(`api/v1/quiz-submit`, { ...data });
+};
+
+const postCreateNewQuizz = async (description, name, difficulty, quizImage) => {
+  const data = new FormData();
+  data.append("description", description);
+  data.append("name", name);
+  data.append("difficulty", difficulty);
+  data.append("quizImage", quizImage);
+  return await axios.post(`api/v1/quiz`, data);
+};
 export {
   postCreateNewUser,
   getAllUser,
@@ -62,5 +71,6 @@ export {
   postRegister,
   getQuizzUser,
   getDataQuiz,
-  postSubmitQuiz
+  postSubmitQuiz,
+  postCreateNewQuizz,
 };

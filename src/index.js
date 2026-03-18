@@ -21,6 +21,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import ListQuizz from "./components/User/ListQuizz";
 import NotFound from "./components/NotFound/NotFound";
 import DetailQuiz from "./components/User/DetailQuiz";
+import ManagerQuizz from "./components/Admin/Content/Quizz/ManagerQuizz";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -38,6 +39,7 @@ root.render(
           <Route path="/admins" element={<Admin />}>
             <Route index element={<DashBoard />} />
             <Route path="manage-user" element={<ManageUser />} />
+            <Route path="manage-quiz" element={<ManagerQuizz />} />
           </Route>
 
           <Route path="/login" element={<Login />} />
