@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getAllQuizForAdmin } from "../../../../service/apiService";
 import "./TableQuizz.scss";
 
-const TableQuizz = () => {
+const TableQuizz = ({fetchTrigger}) => {
   const [listQuiz, setListQuiz] = useState([]);
 
   const getDataQuizAll = async () => {
@@ -16,7 +16,7 @@ const TableQuizz = () => {
 
   useEffect(() => {
     getDataQuizAll();
-  }, []);
+  }, [fetchTrigger]);
 
   const handleEdit = (quiz) => {
     console.log("Edit:", quiz);

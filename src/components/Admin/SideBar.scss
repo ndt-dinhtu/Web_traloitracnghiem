@@ -1,33 +1,39 @@
+.pro-sidebar {
+    height: 100vh; // Chiều cao cố định bằng màn hình
+    position: sticky; // Giữ Sidebar đứng yên
+    top: 0;
+    left: 0;
+    z-index: 100; // Đảm bảo nằm trên các thành phần khác nếu cần
+}
+
 .sidebar-btn-wrapper {
-    
-    display        : flex;
-    align-items    : center;
+    display: flex;
+    align-items: center;
     justify-content: center;
 
     .sidebar-btn {
-        transition     : width 0.3s;
-        width          : 150px;
-        padding        : 1px 5px;
-        border-radius  : 40px;
-        background     : rgba(255, 255, 255, 0.05);
-        color          : #adadad;
+        transition: width 0.3s;
+        width: 150px;
+        padding: 1px 5px;
+        border-radius: 40px;
+        background: rgba(255, 255, 255, 0.05);
+        color: #adadad;
         text-decoration: none;
-        margin         : 0 auto;
-        height         : 35px;
-        display        : flex;
-        align-items    : center;
+        margin: 0 auto;
+        height: 35px;
+        display: flex;
+        align-items: center;
         justify-content: center;
-        text-overflow  : ellipsis;
-        overflow       : hidden;
+        text-overflow: ellipsis;
+        overflow: hidden;
 
         span {
             margin-left: 5px;
-            font-size  : 13px;
+            font-size: 13px;
         }
 
         &:hover {
             color: #dee2ec;
-            ;
         }
     }
 }
