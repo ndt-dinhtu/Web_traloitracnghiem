@@ -53,6 +53,10 @@ const postSubmitQuiz = async (data) => {
   return await axios.post(`api/v1/quiz-submit`, { ...data });
 };
 
+const getAllQuizForAdmin = async () => {
+  return await axios.get(`api/v1/quiz/all`);
+};
+
 const postCreateNewQuizz = async (description, name, difficulty, quizImage) => {
   const data = new FormData();
   data.append("description", description);
@@ -73,4 +77,5 @@ export {
   getDataQuiz,
   postSubmitQuiz,
   postCreateNewQuizz,
+  getAllQuizForAdmin,
 };

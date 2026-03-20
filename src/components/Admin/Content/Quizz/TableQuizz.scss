@@ -1,0 +1,92 @@
+.table-quizz-container {
+    padding-bottom: 0px;
+
+    h2 {
+        margin-bottom: 20px;
+    }
+}
+
+.table-quizz {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+
+    th,
+    td {
+        padding: 12px 15px;
+        text-align: left;
+    }
+
+    thead {
+        background: #f5f6fa;
+
+        th {
+            font-weight: 600;
+        }
+    }
+
+    tbody tr {
+        border-top: 1px solid #eee;
+        transition: 0.2s;
+
+        &:hover {
+            background: #f9f9f9;
+        }
+    }
+
+    img {
+        width: 80px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 6px;
+    }
+}
+
+.badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    color: #fff;
+
+    &.easy {
+        background: #2ecc71;
+    }
+
+    &.medium {
+        background: #f1c40f;
+    }
+
+    &.hard {
+        background: #e74c3c;
+    }
+}
+
+.btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-right: 8px;
+
+    &.edit {
+        background: #3498db;
+        color: #fff;
+    }
+
+    &.delete {
+        background: #e74c3c;
+        color: #fff;
+    }
+
+    &:hover {
+        opacity: 0.8;
+    }
+}
+
+.no-data {
+    text-align: center;
+    padding: 20px;
+    color: #888;
+}
