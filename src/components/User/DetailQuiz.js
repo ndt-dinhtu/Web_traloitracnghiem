@@ -77,7 +77,6 @@ const DetailQuiz = () => {
     if (indexQuestion !== -1) {
       const question = dataQuizClone[indexQuestion];
 
-      console.log(question);
       question.answers = question.answers.map((ans) => {
         if (+ans.id === +answersId) {
           return { ...ans, isSelected: !ans.isSelected };
@@ -113,7 +112,7 @@ const DetailQuiz = () => {
     }
 
     let res = await postSubmitQuiz(payload);
-    console.log(res);
+  
     if (res && res.EC === 0) {
       setDataModalResult({
         countCorrect: res.DT.countCorrect,
