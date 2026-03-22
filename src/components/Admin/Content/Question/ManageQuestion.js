@@ -4,41 +4,35 @@ import { FcPlus } from "react-icons/fc";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
 import { RiImageAddFill } from "react-icons/ri";
 import { IoTrashOutline } from "react-icons/io5";
-import { getAllQuizForAdmin } from "../../../../service/apiService";
+import {
+  getAllQuizForAdmin,
+  postCreateNewQuestion,
+  postCreateNewAnswer,
+} from "../../../../service/apiService";
 
 const ManageQuestion = () => {
   const [dataQizz, setDataQuizz] = useState([]);
-
-  const fetchQuestion = async () => {
-    const res = await getAllQuizForAdmin();
-    if (res && res.EC === 0) {
-      const result = res.DT.map((question, index) => {
-        return `${index}-${question.description}`;
-      });
-      setDataQuizz(result);
-    }
-
-    return res;
-  };
-
-  useEffect(() => {
-    fetchQuestion();
-  }, []);
-
   const [selectedQuiz, setSelectedQuiz] = useState("");
-
   const [questions, setQuestions] = useState([
     {
       id: Date.now(),
       description: "",
-      imageFile: null,
+      imageFile: "",
       imageName: "",
-      answers: [
-        { id: Date.now() + 1, description: "", isCorrect: false },
-        { id: Date.now() + 2, description: "", isCorrect: false },
-      ],
+      answers: [{ id: Date.now() + 1, description: "", isCorrect: false }],
     },
   ]);
+
+  const fetchQuestion = async () => {
+    const res = await getAllQuizForAdmin();
+    if (res && res.EC === 0) {
+      setDataQuizz(res.DT);
+    }
+    console.log(dataQizz);
+  };
+  useEffect(() => {
+    fetchQuestion();
+  }, []);
 
   const handleAddRemoveQuestion = (type, id) => {
     if (type === "ADD") {
@@ -105,6 +99,28 @@ const ManageQuestion = () => {
     }
   };
 
+  const handleOnChangeFile = (e, id) => {
+    if (e.target && e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const previewUrl = URL.createObjectURL(file);
+
+      let questionsCopy = [...questions];
+      let index = questionsCopy.findIndex((item) => item.id === id);
+
+      if (index > -1) {
+        questionsCopy[index].imageFile = file;
+        questionsCopy[index].imageName = file.name;
+        questionsCopy[index].previewUrl = previewUrl;
+
+        setQuestions(questionsCopy);
+      }
+    }
+  };
+
+  const handleSubmit = async () => {
+    console.log("a");
+  };
+
   return (
     <div className="questions-container container">
       <div className="title mb-3">Quản lý câu hỏi bài thi</div>
@@ -116,17 +132,24 @@ const ManageQuestion = () => {
           value={selectedQuiz}
           onChange={(e) => setSelectedQuiz(e.target.value)}
         >
-          
-          {dataQizz.map((question,index)=>{
-            return (
-              <option value={index}>{question}</option>
-            )
-          })}
+          <option value="">Chọn bài Quiz...</option>
+          {dataQizz.map((quiz) => (
+            <option key={quiz.id} value={quiz.id}>
+              {quiz.id} - {quiz.description}
+            </option>
+          ))}
         </select>
       </div>
+         <option value="">Chọn bài Quiz...</option>
+          {dataQizz.map((question) => {
+            return (
+              <option key={question.id} value={question.id}>
+                {question}
+              </option>
+            );
+          })}
 
       <hr />
-
       {/* Danh sách câu hỏi */}
       {questions.map((q, index) => (
         <div
@@ -153,8 +176,21 @@ const ManageQuestion = () => {
                 className="btn btn-outline-primary h-100 d-flex align-items-center"
               >
                 <RiImageAddFill size={25} />
+                {q.previewUrl && (
+                  <div
+                    className="text-muted small mt-1"
+                    onClick={() => window.open(q.previewUrl, "_blank")}
+                  >
+                    {q.imageName}
+                  </div>
+                )}
               </label>
-              <input type="file" id={`upload-${q.id}`} hidden />
+              <input
+                type="file"
+                id={`upload-${q.id}`}
+                onChange={(e) => handleOnChangeFile(e, q.id)}
+                hidden
+              />
             </div>
 
             <div className="btn-add-remove d-flex gap-2">
@@ -227,7 +263,10 @@ const ManageQuestion = () => {
         </div>
       ))}
 
-      <button className="btn btn-warning mt-3 px-5 py-2 fw-bold">
+      <button
+        className="btn btn-warning mt-3 px-5 py-2 fw-bold"
+        onClick={() => handleSubmit()}
+      >
         Lưu câu hỏi
       </button>
     </div>
