@@ -9,6 +9,7 @@ import {
   postCreateNewQuestion,
   postCreateNewAnswer,
 } from "../../../../service/apiService";
+import { toast } from "sonner";
 
 const ManageQuestion = () => {
   const [dataQizz, setDataQuizz] = useState([]);
@@ -28,7 +29,7 @@ const ManageQuestion = () => {
     if (res && res.EC === 0) {
       setDataQuizz(res.DT);
     }
-    console.log(dataQizz);
+    console.log(res.DT);
   };
   useEffect(() => {
     fetchQuestion();
@@ -53,7 +54,7 @@ const ManageQuestion = () => {
   };
 
   const handleAddRemoveAnswer = (type, questionId, answerId) => {
-    let questionsCopy = JSON.parse(JSON.stringify(questions)); // Deep copy
+    let questionsCopy = JSON.parse(JSON.stringify(questions));
     let index = questionsCopy.findIndex((item) => item.id === questionId);
 
     if (index > -1) {
@@ -72,7 +73,6 @@ const ManageQuestion = () => {
     }
   };
 
-  // Hàm cập nhật nội dung câu hỏi/câu trả lời
   const handleInputChange = (type, questionId, value, answerId = null) => {
     let questionsCopy = [...questions];
     let index = questionsCopy.findIndex((item) => item.id === questionId);
@@ -118,9 +118,76 @@ const ManageQuestion = () => {
   };
 
   const handleSubmit = async () => {
-    console.log("a");
-  };
+    if (!selectedQuiz) {
+      toast.error("Vui lòng chọn bài Quiz!");
+      return;
+    }
 
+    let isValid = true;
+    for (let [index, q] of questions.entries()) {
+      if (!q.description) {
+        toast.error(`Câu hỏi ${index + 1} đang trống nội dung!`);
+        isValid = false;
+        break;
+      }
+
+      const hasCorrect = q.answers.some((a) => a.isCorrect === true);
+      if (!hasCorrect) {
+        toast.error(`Câu hỏi ${index + 1} chưa có đáp án đúng!`);
+        isValid = false;
+        break;
+      }
+
+      for (let [aIdx, ans] of q.answers.entries()) {
+        if (!ans.description) {
+          toast.error(
+            `Đáp án ${aIdx + 1} của Câu hỏi ${index + 1} đang trống!`,
+          );
+          isValid = false;
+          break;
+        }
+      }
+      if (!isValid) break;
+    }
+
+    if (!isValid) return;
+
+    for (let question of questions) {
+      const resQ = await postCreateNewQuestion(
+        selectedQuiz,
+        question.description,
+        question.imageFile,
+      );
+
+      if (resQ && resQ.EC === 0) {
+        const questionId = resQ.DT.id;
+
+        await Promise.all(
+          question.answers.map((answer) =>
+            postCreateNewAnswer(
+              answer.description,
+              answer.isCorrect,
+              questionId,
+            ),
+          ),
+        );
+      } else {
+        toast.error(`Lỗi hệ thống khi tạo câu hỏi: ${question.description}`);
+      }
+    }
+
+    toast.success("Đã lưu tất cả câu hỏi và câu trả lời thành công!");
+
+    setQuestions([
+      {
+        id: Date.now(),
+        description: "",
+        imageFile: "",
+        imageName: "",
+        answers: [{ id: Date.now() + 1, description: "", isCorrect: false }],
+      },
+    ]);
+  };
   return (
     <div className="questions-container container">
       <div className="title mb-3">Quản lý câu hỏi bài thi</div>
@@ -140,14 +207,6 @@ const ManageQuestion = () => {
           ))}
         </select>
       </div>
-         <option value="">Chọn bài Quiz...</option>
-          {dataQizz.map((question) => {
-            return (
-              <option key={question.id} value={question.id}>
-                {question}
-              </option>
-            );
-          })}
 
       <hr />
       {/* Danh sách câu hỏi */}
