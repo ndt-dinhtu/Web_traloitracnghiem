@@ -1,0 +1,30 @@
+.questions-container {
+    padding: 30px 0;
+
+    .cursor-pointer {
+        cursor: pointer;
+    }
+
+    .q-main {
+        transition: all 0.3s;
+        &:hover {
+            border-color: #00bfff !important;
+        }
+    }
+
+    .form-check-input {
+        width: 25px;
+        height: 25px;
+        cursor: pointer;
+        border: 2px solid #dee2e6;
+
+        &:checked {
+            background-color: #198754;
+            border-color: #198754;
+        }
+    }
+
+    .badge-ans {
+        width: 30px;
+    }
+}

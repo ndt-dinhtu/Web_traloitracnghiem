@@ -6,6 +6,8 @@ import { postCreateNewQuizz } from "../../../../service/apiService";
 import { toast } from "sonner";
 import TableQuizz from "./TableQuizz";
 import { Accordion } from "react-bootstrap";
+import AssignQuizz from "./AssignQuizz";
+import QuizzQA from "./QuizzQA";
 
 const ManagerQuizz = () => {
   const [name, setName] = useState("");
@@ -157,14 +159,21 @@ const ManagerQuizz = () => {
                 />
               </div>
             </div>
+            <TableQuizz fetchTrigger={fetchTrigger} />
           </Accordion.Body>
         </Accordion.Item>
 
         <Accordion.Item eventKey="1">
-          <Accordion.Header>Danh sách bài thi</Accordion.Header>
+          <Accordion.Header>Quản lí câu hỏi</Accordion.Header>
           <Accordion.Body>
-            {/* Truyền trigger vào TableQuizz */}
-            <TableQuizz fetchTrigger={fetchTrigger} />
+            {" "}
+            <QuizzQA />
+          </Accordion.Body>
+        </Accordion.Item>
+        <Accordion.Item eventKey="2">
+          <Accordion.Header>Quản lí bài thi cho người dùng</Accordion.Header>
+          <Accordion.Body>
+            <AssignQuizz />
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>
