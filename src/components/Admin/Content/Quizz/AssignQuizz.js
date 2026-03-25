@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { getAllQuizForAdmin, getAllUser } from "../../../../service/apiService";
+import {
+  getAllQuizForAdmin,
+  getAllUser,
+  quizAssignToUser,
+} from "../../../../service/apiService";
 import { toast } from "sonner";
-import Select from "react-select"; 
+import Select from "react-select";
 
 const AssignQuizz = () => {
   const [listQuizz, setListQuizz] = useState([]);
-  const [selectedQuizz, setSelectedQuizz] = useState(null); 
+  const [selectedQuizz, setSelectedQuizz] = useState(null);
 
   const [listUser, setListUser] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -38,28 +42,29 @@ const AssignQuizz = () => {
   };
 
   const handleAssign = async () => {
-    
     if (!selectedQuizz || !selectedUser) {
       toast.error("Vui lòng chọn đầy đủ Quiz và User!");
       return;
     }
 
-    // const res = await postAssignQuiz(selectedQuizz.value, selectedUser.value);
-    // if (res && res.EC === 0) {
-    //   toast.success("Gán bài tập thành công!");
-    //   setSelectedQuizz(null); // Reset sau khi thành công
-    //   setSelectedUser(null);
-    // } else {
-    //   toast.error(res.EM);
-    // }
+    const quizId = selectedQuizz.value;
+    const userId = selectedUser.value;
+
+    const res = await quizAssignToUser(quizId,userId);
+    if(res&&res.EC===0){
+      setSelectedQuizz(null)
+      setSelectedUser(null)
+      toast.success(res.EM)
+    }
+    else{
+      toast.error(res.EM)
+    }
   };
 
   return (
     <div className="assign-quiz-container container mt-5">
       <div className="card shadow p-4 border-0">
-        <h4 className="mb-4 text-primary fw-bold">Assign Quiz to User</h4>
         <div className="row g-4">
-     
           <div className="col-md-6">
             <label className="form-label fw-bold">Chọn bài Quiz:</label>
             <Select
@@ -67,11 +72,10 @@ const AssignQuizz = () => {
               onChange={setSelectedQuizz}
               options={listQuizz}
               placeholder="Tìm kiếm bài Quiz..."
-              isClearable={true} 
+              isClearable={true}
             />
           </div>
 
-        
           <div className="col-md-6">
             <label className="form-label fw-bold">Chọn người dùng:</label>
             <Select

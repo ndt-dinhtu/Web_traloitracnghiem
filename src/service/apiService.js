@@ -86,6 +86,10 @@ const postCreateNewAnswer = async (
   });
 };
 
+const quizAssignToUser = async (quizId, userId) => {
+  return await axios.post(`api/v1/quiz-assign-to-user`, { quizId, userId });
+};
+
 export {
   postCreateNewUser,
   getAllUser,
@@ -101,4 +105,5 @@ export {
   getAllQuizForAdmin,
   postCreateNewQuestion,
   postCreateNewAnswer,
+  quizAssignToUser,
 };
