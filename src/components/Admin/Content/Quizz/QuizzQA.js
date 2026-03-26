@@ -3,11 +3,12 @@ import "./QuizzQA.scss";
 import { FcPlus } from "react-icons/fc";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
 import { RiImageAddFill } from "react-icons/ri";
-import { IoTrashOutline } from "react-icons/io5";
+import { IoTrashOutline, IoCloseOutline } from "react-icons/io5"; // Thêm icon đóng
 import {
   getAllQuizForAdmin,
   postCreateNewQuestion,
   postCreateNewAnswer,
+  getQuizWithQA,
 } from "../../../../service/apiService";
 import { toast } from "sonner";
 
@@ -20,20 +21,58 @@ const QuizzQA = () => {
       description: "",
       imageFile: "",
       imageName: "",
+      previewUrl: "", // Đảm bảo có previewUrl mặc định
       answers: [{ id: Date.now() + 1, description: "", isCorrect: false }],
     },
   ]);
+
+  const [isPreviewImageOpen, setIsPreviewImageOpen] = useState(false);
+  const [currentPreviewImageUrl, setCurrentPreviewImageUrl] = useState("");
 
   const fetchQuestion = async () => {
     const res = await getAllQuizForAdmin();
     if (res && res.EC === 0) {
       setDataQuizz(res.DT);
     }
-    console.log(res.DT);
   };
+
   useEffect(() => {
     fetchQuestion();
   }, []);
+
+  useEffect(() => {
+    if (selectedQuiz) {
+      fetchQuizzWithQA();
+    }
+  }, [selectedQuiz]);
+
+  const fetchQuizzWithQA = async () => {
+    const res = await getQuizWithQA(selectedQuiz);
+    if (res && res.EC === 0) {
+      if (res.DT.qa && res.DT.qa.length > 0) {
+        let updatedQA = res.DT.qa.map((question) => {
+          if (question.imageFile) {
+            question.previewUrl = `data:image/jpeg;base64,${question.imageFile}`;
+          }
+          return question;
+        });
+        setQuestions(updatedQA);
+      } else {
+        setQuestions([
+          {
+            id: Date.now(),
+            description: "",
+            imageFile: "",
+            imageName: "",
+            previewUrl: "",
+            answers: [
+              { id: Date.now() + 1, description: "", isCorrect: false },
+            ],
+          },
+        ]);
+      }
+    }
+  };
 
   const handleAddRemoveQuestion = (type, id) => {
     if (type === "ADD") {
@@ -42,6 +81,7 @@ const QuizzQA = () => {
         description: "",
         imageFile: null,
         imageName: "",
+        previewUrl: "",
         answers: [{ id: Date.now() + 1, description: "", isCorrect: false }],
       };
       setQuestions([...questions, newQuestion]);
@@ -117,6 +157,14 @@ const QuizzQA = () => {
     }
   };
 
+  // --- HÀM XỬ LÝ MỞ PREVIEW ---
+  const handlePreviewImage = (url) => {
+    if (url) {
+      setCurrentPreviewImageUrl(url);
+      setIsPreviewImageOpen(true);
+    }
+  };
+
   const handleSubmit = async () => {
     if (!selectedQuiz) {
       toast.error("Vui lòng chọn bài Quiz!");
@@ -184,14 +232,14 @@ const QuizzQA = () => {
         description: "",
         imageFile: "",
         imageName: "",
+        previewUrl: "",
         answers: [{ id: Date.now() + 1, description: "", isCorrect: false }],
       },
     ]);
   };
+
   return (
     <div className="questions-container container">
-     
-
       <div className="d-flex col-md-6 mb-4">
         <label className=" p-2 form-label">Chọn bài Quiz:</label>
         <select
@@ -229,20 +277,14 @@ const QuizzQA = () => {
               <label>Câu hỏi {index + 1}:</label>
             </div>
 
-            <div className="group-upload">
+            {/* --- PHẦN UPLOAD VÀ HIỂN THỊ TÊN ẢNH --- */}
+            <div className="group-upload d-flex flex-column align-items-center gap-1">
               <label
                 htmlFor={`upload-${q.id}`}
-                className="btn btn-outline-primary h-100 d-flex align-items-center"
+                className="btn btn-outline-primary"
+                title="Thêm ảnh"
               >
                 <RiImageAddFill size={25} />
-                {q.previewUrl && (
-                  <div
-                    className="text-muted small mt-1"
-                    onClick={() => window.open(q.previewUrl, "_blank")}
-                  >
-                    {q.imageName}
-                  </div>
-                )}
               </label>
               <input
                 type="file"
@@ -250,6 +292,16 @@ const QuizzQA = () => {
                 onChange={(e) => handleOnChangeFile(e, q.id)}
                 hidden
               />
+
+              {/* Chỉ hiển thị tên ảnh và cho phép click để xem preview */}
+              {q.previewUrl && (
+                <div
+                  className="image-name-link text-primary small text-decoration-underline cursor-pointer"
+                  onClick={() => handlePreviewImage(q.previewUrl)}
+                >
+                  {q.imageName || `Ảnh_Câu_${index + 1}`}
+                </div>
+              )}
             </div>
 
             <div className="btn-add-remove d-flex gap-2">
@@ -328,6 +380,28 @@ const QuizzQA = () => {
       >
         Lưu câu hỏi
       </button>
+
+      {/* --- COMPONENT MODAL ĐỂ PREVIEW ẢNH --- */}
+      {isPreviewImageOpen && (
+        <div
+          className="preview-image-modal"
+          onClick={() => setIsPreviewImageOpen(false)}
+        >
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h5>Xem trước ảnh</h5>
+              <IoCloseOutline
+                className="close-icon cursor-pointer"
+                size={30}
+                onClick={() => setIsPreviewImageOpen(false)}
+              />
+            </div>
+            <div className="modal-body">
+              <img src={currentPreviewImageUrl} alt="Preview" />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
