@@ -5,6 +5,7 @@ import _ from "lodash";
 import "./DetailQuiz.scss";
 import Question from "./Question";
 import ModalResult from "./ModalResult";
+import Rightcontent from "./RightContent/Rightcontent";
 
 const DetailQuiz = () => {
   const location = useLocation();
@@ -112,7 +113,7 @@ const DetailQuiz = () => {
     }
 
     let res = await postSubmitQuiz(payload);
-  
+
     if (res && res.EC === 0) {
       setDataModalResult({
         countCorrect: res.DT.countCorrect,
@@ -159,7 +160,14 @@ const DetailQuiz = () => {
           </button>
         </div>
       </div>
-      <div className="right-content">tight content</div>
+      <div className="right-content">
+        <Rightcontent
+          dataQuiz={dataQuiz}
+          index={index}
+          setIndex={setIndex} 
+          handleFinish={handleFinish}
+        />
+      </div>
       <ModalResult
         show={showModalResult}
         setShow={setShowModalResult}
