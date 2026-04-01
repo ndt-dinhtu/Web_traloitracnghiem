@@ -22,7 +22,8 @@ import ListQuizz from "./components/User/ListQuizz";
 import NotFound from "./components/NotFound/NotFound";
 import DetailQuiz from "./components/User/DetailQuiz";
 import ManagerQuizz from "./components/Admin/Content/Quizz/ManagerQuizz";
-import ManageQuestion from "./components/Admin/Content/Question/ManageQuestion"
+import ManageQuestion from "./components/Admin/Content/Question/ManageQuestion";
+import PrivateRoute from "./routes/PrivateRoute";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -33,15 +34,36 @@ root.render(
         <Routes>
           <Route path="/" element={<App />}>
             <Route index element={<HomePage />} />
-            <Route path="/users" element={<ListQuizz />} />
+            <Route
+              path="/users"
+              element={
+                <PrivateRoute>
+                  <ListQuizz />
+                </PrivateRoute>
+              }
+            />
           </Route>
-          <Route path="/quiz/:id" element={<DetailQuiz />} />
+          <Route
+            path="/quiz/:id"
+            element={
+              <PrivateRoute>
+                <DetailQuiz />
+              </PrivateRoute>
+            }
+          />
 
-          <Route path="/admins" element={<Admin />}>
+          <Route
+            path="/admins"
+            element={
+              <PrivateRoute>
+                <Admin />
+              </PrivateRoute>
+            }
+          >
             <Route index element={<DashBoard />} />
             <Route path="manage-user" element={<ManageUser />} />
             <Route path="manage-quiz" element={<ManagerQuizz />} />
-               <Route path="manage-question" element={<ManageQuestion />} />
+            <Route path="manage-question" element={<ManageQuestion />} />
           </Route>
 
           <Route path="/login" element={<Login />} />

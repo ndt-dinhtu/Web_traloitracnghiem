@@ -94,6 +94,9 @@ const getQuizWithQA = async (questionId) => {
   return await axios.get(`api/v1/quiz-with-qa/${questionId}`);
 };
 
+const LogOut = async (email, refresh_token) => {
+  return await axios.post(`api/v1/logout`, { email, refresh_token });
+};
 export {
   postCreateNewUser,
   getAllUser,
@@ -111,4 +114,5 @@ export {
   postCreateNewAnswer,
   quizAssignToUser,
   getQuizWithQA,
+  LogOut,
 };
